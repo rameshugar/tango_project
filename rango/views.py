@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from rango.bing_search import run_query
 
 
 def home(request):
@@ -25,7 +26,7 @@ def index(request):
     # Retrieve the top 5 only - or all if less than 5.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
     category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.all()
+    page_list = Page.objects.order_by('-views')[:10]
     context_dict = {'categories': category_list, 'pages': page_list}
 
     # Render the response and send it back!
@@ -36,6 +37,16 @@ def category(request, category_name_slug):
 
     # Create a context dictionary which we can pass to the template rendering engine.
     context_dict = {}
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+    context_dict['result_list'] = result_list
    
     try:
 	    # Can we find a category name slug with the given name?
@@ -227,3 +238,26 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
+
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list})
+
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'page' in request.GET:
+            page_id = request.GET['page']
+            page_obj = Page.objects.get(id=page_id)
+            page_obj.views  += 1
+            page_obj.save()
+            return HttpResponseRedirect(page_obj.url)
