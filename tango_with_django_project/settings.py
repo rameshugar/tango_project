@@ -112,3 +112,7 @@ LOGIN_REDIRECT_URL = '/rango/'  # The page you want users to arrive at after the
 LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
                                                                 # and are trying to access pages requiring authentication
 
+if 'heroku' in os.environ:
+    import dj_database_url
+    DATABASES['default']=dj_database_url.config()
+
