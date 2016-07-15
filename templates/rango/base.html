@@ -1,4 +1,6 @@
 {% load rango_extras %}
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -64,6 +66,10 @@
 
 <div id="cats">
 </div>
+<div id="pages">
+  
+<button data-catid="{{category.id}}" data-title="{{ result.title }}" data-url="{{ result.link }}" class="rango-add btn btn-mini btn-info" type="button">Add</button>
+</div>
 
                 {% block side_block %}
                     {% get_category_list category %}   
@@ -86,6 +92,8 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'js/rango-ajax.js' %}"></script>
+
     <script> $('.rango-add').click(function(){
     var catid = $(this).attr("data-catid");
         var url = $(this).attr("data-url");
