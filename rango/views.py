@@ -240,7 +240,7 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
 
-<<<<<<< HEAD
+
 @login_required
 def like_category(request):
 
@@ -300,7 +300,7 @@ def auto_add_page(request):
             context_dict['pages'] = pages
 
     return render(request, 'rango/page_list.html', context_dict)
-=======
+
 def search(request):
 
     result_list = []
@@ -323,4 +323,4 @@ def track_url(request):
             page_obj.views  += 1
             page_obj.save()
             return HttpResponseRedirect(page_obj.url)
->>>>>>> 9ef1275de9dde3a125322c1045458b2bfb08d4f0
+
